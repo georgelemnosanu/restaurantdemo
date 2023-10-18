@@ -32,5 +32,5 @@ public class CommandMenuItem {
 
     }
 
-    // Constructors, getters, and setters
+
 }

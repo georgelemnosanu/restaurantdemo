@@ -23,11 +23,11 @@ public class Command {
 
     @ManyToOne
     @JoinColumn(name = "table_id")
-    @JsonIgnore // Exclude 'table' from JSON serialization
+    @JsonIgnore
     private Table table;
 
     @OneToMany(mappedBy = "command", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("command") // Exclude 'command' from JSON serialization
+    @JsonIgnoreProperties("command")
     private Set<CommandMenuItem> menuItemsWithQuantities = new HashSet<>();
 
 

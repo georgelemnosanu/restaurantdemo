@@ -20,6 +20,6 @@ public class Menu {
     private String name;
 
     @OneToMany(mappedBy = "menu")
-    @JsonIgnoreProperties("menu") // Ignore the 'menu' property in Speciality
+    @JsonIgnoreProperties("menu")
     private List<Speciality> specialities;
 }

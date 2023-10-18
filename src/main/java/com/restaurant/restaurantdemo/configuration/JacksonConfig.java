@@ -14,7 +14,7 @@ public class JacksonConfig {
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        // Configure to handle circular references
+
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         objectMapper.setFilterProvider(new SimpleFilterProvider().addFilter("circularFilter",
                 SimpleBeanPropertyFilter.serializeAllExcept()));
