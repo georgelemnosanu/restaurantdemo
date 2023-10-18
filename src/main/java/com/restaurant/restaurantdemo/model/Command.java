@@ -17,6 +17,10 @@ public class Command {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    private String barAdditionalInformation;
+    private String kitchenAdditionalInformation;
+
     @ManyToOne
     @JoinColumn(name = "table_id")
     @JsonIgnore // Exclude 'table' from JSON serialization
@@ -25,6 +29,8 @@ public class Command {
     @OneToMany(mappedBy = "command", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("command") // Exclude 'command' from JSON serialization
     private Set<CommandMenuItem> menuItemsWithQuantities = new HashSet<>();
+
+
 
 
      public Command(){

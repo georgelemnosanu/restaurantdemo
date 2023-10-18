@@ -11,7 +11,9 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -45,35 +47,19 @@ public class CommandService {
     }
 
 
-//    @Transactional
-//    public Command addMenuItemsWithQuantities(Command command, Map<MenuItem, Integer> menuItemsWithQuantities) {
-//        if (command.getId() == null) {
-//            command = commandRepository.save(command);
-//        }
-//        Command finalCommand = command;
-//        menuItemsWithQuantities.forEach((menuItem, quantity) -> {
-//            CommandMenuItem commandMenuItem = new CommandMenuItem(finalCommand, menuItem, quantity);
-//            finalCommand.getMenuItemsWithQuantities().add(commandMenuItem);
-//        });
-//
-//        return commandRepository.save(command);
-//    }
-
-
     @Transactional
-    public Command createCommandWithMenuItems(Integer tableId, Map<Integer, Integer> menuItemsWithQuantities) {
-        // Fetch the table by its ID
+    public Command createCommandWithMenuItems(Integer tableId, Map<Integer, Integer> menuItemsWithQuantities,String barAdditionalInformation, String kitchenAdditionalInformation) {
         Table table = tableService.findbyId(tableId);
 
         if (table == null) {
             throw new RuntimeException("Table not found with ID: " + tableId);
         }
 
-        // Create a new Command
         Command command = new Command();
         command.setTable(table);
+        command.setBarAdditionalInformation(barAdditionalInformation);
+        command.setKitchenAdditionalInformation(kitchenAdditionalInformation);
 
-        // Create CommandMenuItem entities for menu items with quantities
         for (Map.Entry<Integer, Integer> entry : menuItemsWithQuantities.entrySet()) {
             Integer menuItemId = entry.getKey();
             Integer quantity = entry.getValue();
@@ -88,21 +74,25 @@ public class CommandService {
         return commandRepository.save(command);
     }
 
-    private Command getCommand(Integer commandId) {
-       Command command;
-        Optional<Command> commandFound = commandRepository.findById(commandId);
-        if (!commandFound.isPresent()) {
-            command = new Command();
-            command.setId(commandId);
-            command = commandRepository.save(command);
-        } else {
-           command = commandFound.get();
+    public Command editCommandWithMenuItems(Integer commandid, Map<Integer, Integer> menuItemsWithQuantities,String barAdditionalInformation, String kitchenAdditionalInformation) {
+        Command existingCommand = commandRepository.findById(commandid).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Command not found"));
+        existingCommand.setBarAdditionalInformation(barAdditionalInformation);
+        existingCommand.setKitchenAdditionalInformation(kitchenAdditionalInformation);
+
+        for (Map.Entry<Integer, Integer> entry : menuItemsWithQuantities.entrySet()) {
+            Integer menuItemId = entry.getKey();
+            Integer quantity = entry.getValue();
+            MenuItem menuItem = menuItemService.findbyId(menuItemId);
+
+            if (menuItem != null) {
+                CommandMenuItem commandMenuItem = new CommandMenuItem(existingCommand, menuItem, quantity);
+                existingCommand.getMenuItemsWithQuantities().add(commandMenuItem);
+            }
         }
-        return command;
+
+        return commandRepository.save(existingCommand);
     }
 
 
-    public Command createComand(Command command){
-        return commandRepository.save(command);
     }
-}
+

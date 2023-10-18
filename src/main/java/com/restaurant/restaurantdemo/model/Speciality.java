@@ -27,6 +27,10 @@ public class Speciality {
     private List<MenuItem> items;
 
     @ManyToOne
+    @JoinColumn(name = "specialityClass_id")
+    private SpecialityClass specialityClass;
+
+    @ManyToOne
     @JoinColumn(name = "menu_id")
     @JsonIgnoreProperties("specialities")
     private Menu menu;
