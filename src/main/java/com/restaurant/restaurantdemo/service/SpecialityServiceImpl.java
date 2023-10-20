@@ -28,7 +28,6 @@ public class SpecialityServiceImpl {
       return  specialityRepository.findAll();
     }
 
-
     public Speciality updateSpeciality(Integer specialityId, String newName) {
         Speciality existingSpeciality = specialityRepository.findById(specialityId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Speciality not found"));

@@ -19,13 +19,6 @@ public class TableServiceImpl {
     private final TableRepository tableRepository;
 
 
-//    public void createTable(String name) {
-//    tableRepository.findByTableName(name).ifPresent(table -> {throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Table Already Exists!");
-//    });
-//    Table table = new Table();
-//    table.setTableName(name);
-//    tableRepository.save(table);
-//    }
 
   public List<Table> findAll(){
         return tableRepository.findAll();
