@@ -18,5 +18,8 @@ public class CreateCommandRequest {
     @JsonProperty("barNotes")
     private String barNotes;
 
+    @JsonProperty("commandId")
+    private Integer commandId;
+
 
 }

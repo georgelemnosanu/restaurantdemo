@@ -1,10 +1,7 @@
 package com.restaurant.restaurantdemo.service;
 
 
-import com.restaurant.restaurantdemo.model.Command;
-import com.restaurant.restaurantdemo.model.CommandMenuItem;
-import com.restaurant.restaurantdemo.model.MenuItem;
-import com.restaurant.restaurantdemo.model.Table;
+import com.restaurant.restaurantdemo.model.*;
 import com.restaurant.restaurantdemo.repository.CommandRepository;
 import com.restaurant.restaurantdemo.repository.MenuItemRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +43,38 @@ public class CommandService {
     public Command findById(Integer commandId){
         return commandRepository.findById(commandId)
                 .orElseThrow(()-> new EntityNotFoundException("Command Not Found!"));
+    }
+
+    public List<Command> commandListKitchen() {
+        List<Command> kitchenCommands = new ArrayList<>();
+
+        for (Command command : commandRepository.findAll()) {
+            for (CommandMenuItem commandMenuItem : command.getMenuItemsWithQuantities()) {
+                MenuItem menuItem = commandMenuItem.getMenuItem();
+                Speciality speciality = menuItem.getSpeciality();
+                if (speciality.getSpecialityClass().getId() == 2) {
+                    kitchenCommands.add(command);
+                    break;
+                }
+            }
+        }
+        return kitchenCommands;
+    }
+
+    public List<Command> commandListBar(){
+        List<Command> barCommandList = new ArrayList<>();
+
+        for(Command command : commandRepository.findAll()){
+            for(CommandMenuItem commandMenuItem : command.getMenuItemsWithQuantities()){
+                MenuItem menuItem = commandMenuItem.getMenuItem();
+                Speciality speciality = menuItem.getSpeciality();
+                if(speciality.getSpecialityClass().getId() == 1){
+                    barCommandList.add(command);
+                    break;
+                }
+            }
+        }
+        return barCommandList;
     }
 
 

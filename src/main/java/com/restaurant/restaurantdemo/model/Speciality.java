@@ -20,15 +20,16 @@ public class Speciality {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @ManyToOne
+    @JoinColumn(name = "specialityClass_id")
+    private SpecialityClass specialityClass;
+
+
     private String name;
 
     @OneToMany(mappedBy = "speciality")
     @JsonIgnoreProperties("speciality")
     private List<MenuItem> items;
-
-    @ManyToOne
-    @JoinColumn(name = "specialityClass_id")
-    private SpecialityClass specialityClass;
 
     @ManyToOne
     @JoinColumn(name = "menu_id")

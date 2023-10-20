@@ -48,9 +48,7 @@ public class SpecialityController {
             Optional<Speciality> optionalSpeciality = specialityServiceImpl.findById(specialityId);
 
             if (optionalSpeciality.isPresent()) {
-                Speciality speciality = optionalSpeciality.get();
-                speciality.setName(newName);
-               specialityRepository.save(speciality);
+                specialityServiceImpl.updateSpeciality(specialityId,newName);
                 return ResponseEntity.ok("Speciality updated successfully");
             } else {
                 return ResponseEntity.notFound().build();

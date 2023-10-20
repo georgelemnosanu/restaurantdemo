@@ -18,13 +18,13 @@ public class Command {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String barAdditionalInformation;
-    private String kitchenAdditionalInformation;
-
     @ManyToOne
     @JoinColumn(name = "table_id")
-    @JsonIgnore
+//    @JsonIgnore
     private Table table;
+
+    private String barAdditionalInformation;
+    private String kitchenAdditionalInformation;
 
     @OneToMany(mappedBy = "command", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("command")

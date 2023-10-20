@@ -34,7 +34,15 @@ public class ComandController {
          return commandService.commandList();
     }
 
+   @GetMapping ("/viewKitchenCommand")
+   public List<Command> kitchenCommandList(){
+         return commandService.commandListKitchen();
+   }
 
+   @GetMapping ("/barCommandList")
+   public List<Command> barCommandList(){
+         return commandService.commandListBar();
+   }
 
     @PostMapping("/create")
     public ResponseEntity<Command> createCommandWithMenuItems(
@@ -54,13 +62,14 @@ public class ComandController {
         return new ResponseEntity<>(createdCommand, HttpStatus.CREATED);
     }
 
-    @PutMapping("/editCommand/{commandId}")
+    @PutMapping("/editCommand")
     public ResponseEntity<Command> editCommandWithMenuItems(
-            @PathVariable Integer commandId,
             @RequestBody CreateCommandRequest request) {
+
         Map<Integer, Integer> menuItemsWithQuantities = request.getMenuItemsWithQuantities();
         String barAdditionalInformation = request.getBarNotes();
         String kitchenAdditionalInformation = request.getKitchenNotes();
+        Integer commandId = request.getCommandId();
 
         Command updatedCommand = commandService.editCommandWithMenuItems(
                 commandId,
