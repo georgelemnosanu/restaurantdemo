@@ -19,7 +19,6 @@ public class TableServiceImpl {
     private final TableRepository tableRepository;
 
 
-
   public List<Table> findAll(){
         return tableRepository.findAll();
   }

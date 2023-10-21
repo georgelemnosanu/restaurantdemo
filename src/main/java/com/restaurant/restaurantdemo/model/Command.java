@@ -31,8 +31,6 @@ public class Command {
     private Set<CommandMenuItem> menuItemsWithQuantities = new HashSet<>();
 
 
-
-
      public Command(){
      }
 

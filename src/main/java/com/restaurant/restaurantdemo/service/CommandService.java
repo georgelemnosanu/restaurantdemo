@@ -2,8 +2,7 @@ package com.restaurant.restaurantdemo.service;
 
 
 import com.restaurant.restaurantdemo.model.*;
-import com.restaurant.restaurantdemo.repository.CommandRepository;
-import com.restaurant.restaurantdemo.repository.MenuItemRepository;
+import com.restaurant.restaurantdemo.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +23,20 @@ public class CommandService {
     private CommandRepository commandRepository;
 
     @Autowired
-    private MenuItemRepository menuItemRepository;
-
-    @Autowired
     private TableServiceImpl tableService;
 
     @Autowired
     private MenuItemServiceImpl menuItemService;
 
+    @Autowired
+    private SpecialityClassRepository specialityClassRepository;
 
 
+
+
+   public List<SpecialityClass> specialityClassList(){
+       return specialityClassRepository.findAll();
+   }
 
     public List<Command> commandList(){
         return commandRepository.findAll();
@@ -44,26 +47,12 @@ public class CommandService {
                 .orElseThrow(()-> new EntityNotFoundException("Command Not Found!"));
     }
 
-    public List<Command> commandListKitchen() {
-        List<Command> kitchenCommands = new ArrayList<>();
 
-        return kitchenCommands;
-    }
-    public List<Command> commandListBar(){
-        List<Command> barCommandList = new ArrayList<>();
 
-        for(Command command : commandRepository.findAll()){
-            for(CommandMenuItem commandMenuItem : command.getMenuItemsWithQuantities()){
-                MenuItem menuItem = commandMenuItem.getMenuItem();
-                Speciality speciality = menuItem.getSpeciality();
-                if(speciality.getSpecialityClass().getId() == 1){
-                    barCommandList.add(command);
-                    break;
-                }
-            }
-        }
-        return barCommandList;
+    public SpecialityClass findSpecialityById(Integer id){
+      return specialityClassRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Speciality Not Found!"));
     }
+
 
 
     @Transactional

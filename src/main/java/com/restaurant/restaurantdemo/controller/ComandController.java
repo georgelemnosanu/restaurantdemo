@@ -1,19 +1,14 @@
 package com.restaurant.restaurantdemo.controller;
 
-import com.restaurant.restaurantdemo.model.Command;
-import com.restaurant.restaurantdemo.model.CreateCommandRequest;
-import com.restaurant.restaurantdemo.model.MenuItem;
-import com.restaurant.restaurantdemo.model.Table;
+import com.restaurant.restaurantdemo.model.*;
+import com.restaurant.restaurantdemo.repository.SpecialityClassRepository;
 import com.restaurant.restaurantdemo.service.CommandService;
 import com.restaurant.restaurantdemo.service.MenuItemServiceImpl;
-import jdk.jfr.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,20 +24,18 @@ public class ComandController {
     @Autowired
     MenuItemServiceImpl menuItemService;
 
+    @Autowired
+    SpecialityClassRepository specialityClassRepository;
+
+    @GetMapping("/allSpecialityClass")
+    public List<SpecialityClass> specialityClassList(){
+        return commandService.specialityClassList();
+    }
+
      @GetMapping("/viewAllCommand")
      public List<Command> commandList(){
          return commandService.commandList();
     }
-
-   @GetMapping ("/viewKitchenCommand")
-   public List<Command> kitchenCommandList(){
-         return commandService.commandListKitchen();
-   }
-
-   @GetMapping ("/barCommandList")
-   public List<Command> barCommandList(){
-         return commandService.commandListBar();
-   }
 
     @PostMapping("/create")
     public ResponseEntity<Command> createCommandWithMenuItems(
