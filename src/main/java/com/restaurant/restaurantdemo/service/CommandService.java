@@ -15,8 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +34,7 @@ public class CommandService {
 
 
 
+
     public List<Command> commandList(){
         return commandRepository.findAll();
     }
@@ -48,19 +47,8 @@ public class CommandService {
     public List<Command> commandListKitchen() {
         List<Command> kitchenCommands = new ArrayList<>();
 
-        for (Command command : commandRepository.findAll()) {
-            for (CommandMenuItem commandMenuItem : command.getMenuItemsWithQuantities()) {
-                MenuItem menuItem = commandMenuItem.getMenuItem();
-                Speciality speciality = menuItem.getSpeciality();
-                if (speciality.getSpecialityClass().getId() == 2) {
-                    kitchenCommands.add(command);
-                    break;
-                }
-            }
-        }
         return kitchenCommands;
     }
-
     public List<Command> commandListBar(){
         List<Command> barCommandList = new ArrayList<>();
 
