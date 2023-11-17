@@ -1,6 +1,8 @@
 package com.restaurant.restaurantdemo.service;
 
 import com.restaurant.restaurantdemo.model.Speciality;
+import com.restaurant.restaurantdemo.model.SpecialityClass;
+import com.restaurant.restaurantdemo.repository.SpecialityClassRepository;
 import com.restaurant.restaurantdemo.repository.SpecialityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SpecialityServiceImpl {
     private final SpecialityRepository specialityRepository;
-
+    private final SpecialityClassRepository specialityClassRepository;
 
     public Speciality createSpeciality(Speciality speciality){
         return specialityRepository.save(speciality);
@@ -26,6 +28,10 @@ public class SpecialityServiceImpl {
 
     public List<Speciality> specialityList(){
       return  specialityRepository.findAll();
+    }
+
+    public List<SpecialityClass> specialityClassList(){
+        return specialityClassRepository.findAll();
     }
 
     public Speciality updateSpeciality(Integer specialityId, String newName) {

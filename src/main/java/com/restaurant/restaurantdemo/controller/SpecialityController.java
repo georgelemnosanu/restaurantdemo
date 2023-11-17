@@ -1,6 +1,7 @@
 package com.restaurant.restaurantdemo.controller;
 
 import com.restaurant.restaurantdemo.model.Speciality;
+import com.restaurant.restaurantdemo.model.SpecialityClass;
 import com.restaurant.restaurantdemo.repository.SpecialityRepository;
 import com.restaurant.restaurantdemo.service.SpecialityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ public class SpecialityController {
     @GetMapping("/allSpeciality")
     public List<Speciality>specialityList(){
        return specialityRepository.findAll();
+    }
+
+    @GetMapping ("/allSpecialityClass")
+    public List<SpecialityClass> specialityClassList(){
+        return specialityServiceImpl.specialityClassList();
     }
 
     @PostMapping("/submitCreateSpeciality")

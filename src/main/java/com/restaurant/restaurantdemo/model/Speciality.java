@@ -24,6 +24,10 @@ public class Speciality {
     @JoinColumn(name = "specialityClass_id")
     private SpecialityClass specialityClass;
 
+    @ManyToOne
+    @JoinColumn(name = "menu_id")
+//    @JsonIgnoreProperties("specialities")
+    private Menu menu;
 
     private String name;
 
@@ -31,9 +35,6 @@ public class Speciality {
     @JsonIgnoreProperties("speciality")
     private List<MenuItem> items;
 
-    @ManyToOne
-    @JoinColumn(name = "menu_id")
-    @JsonIgnoreProperties("specialities")
-    private Menu menu;
+
 
 }

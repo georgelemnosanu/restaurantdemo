@@ -4,6 +4,7 @@ import com.restaurant.restaurantdemo.model.Table;
 import com.restaurant.restaurantdemo.repository.TableRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,16 @@ public class TableServiceImpl {
       return tableRepository.findById(tableId)
               .orElseThrow(()-> new EntityNotFoundException("Table Not Found!"));
   }
+
+  public Table findByID(Integer id){
+      return tableRepository.findById(id).orElseThrow(()-> new ObjectNotFoundException(HttpStatus.NOT_FOUND,"Table Not Found"));
+  }
+
+  public Table createTable(Table table){
+      return tableRepository.save(table);
+  }
+
+
   }
 
 
