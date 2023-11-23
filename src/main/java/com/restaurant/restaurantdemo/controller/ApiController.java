@@ -52,19 +52,7 @@ public class ApiController {
         this.menuItemService = menuItemService;
     }
 
-//    @GetMapping("/menus/{menuId}/specialities")
-//    public ResponseEntity<List<Speciality>> getSpecialitiesInMenu(@PathVariable Integer menuId) {
-//        Optional<Menu> menu = menuRespository.findById(menuId);
-//
-//        if (menu == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//
-//        List<Speciality> specialities = specialityService.specialityList();
-//        return new ResponseEntity<>(specialities, HttpStatus.OK);
-//    }
 
-    // Endpoint to fetch menu items within a speciality by speciality ID
     @GetMapping("/specialities/{specialityId}/menuitems")
     public ResponseEntity<List<MenuItem>> getMenuItemsBySpeciality(@PathVariable Integer specialityId) {
         Optional<Speciality> speciality = specialityRepository.findById(specialityId);

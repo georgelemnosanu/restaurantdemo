@@ -26,7 +26,7 @@ public class Speciality {
 
     @ManyToOne
     @JoinColumn(name = "menu_id")
-//    @JsonIgnoreProperties("specialities")
+
     private Menu menu;
 
     private String name;

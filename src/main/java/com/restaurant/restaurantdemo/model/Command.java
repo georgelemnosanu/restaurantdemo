@@ -20,7 +20,7 @@ public class Command {
 
     @ManyToOne
     @JoinColumn(name = "table_id")
-//    @JsonIgnore
+
     private Table table;
 
     private String barAdditionalInformation;
