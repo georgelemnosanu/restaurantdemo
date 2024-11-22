@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/menuItem")
-@CrossOrigin(origins = "https://reactapprestaurantdeploy-production.up.railway.app")
+@CrossOrigin(origins = "https://lmncheap.store")
 public class MenuItemController {
     @Autowired
     private MenuItemServiceImpl menuItemService;

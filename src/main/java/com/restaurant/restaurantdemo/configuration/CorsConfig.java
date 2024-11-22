@@ -14,12 +14,21 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000" , "https://reactapprestaurantdeploy-production.up.railway.app", "https://lmncheap.store" ));
+
+
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://lmncheap.store"));
+
+
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+
+
         corsConfiguration.setAllowCredentials(true);
+
+
         corsConfiguration.addAllowedHeader("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", corsConfiguration);
 
         return new CorsFilter(source);
