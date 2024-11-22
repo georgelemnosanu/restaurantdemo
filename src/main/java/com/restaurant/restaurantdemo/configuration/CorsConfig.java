@@ -10,25 +10,27 @@ import java.util.Arrays;
 
 @Configuration
 public class CorsConfig {
-
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
+        // Permite toate originile
+        corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
+        // SAU, dacă ai nevoie de credentials, specifică explicit originile:
+        // corsConfiguration.setAllowedOrigins(Arrays.asList(
+        //     "http://localhost:3000",
+        //     "https://lmncheap.store",
+        //     "https://www.lmncheap.store"
+        // ));
 
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://lmncheap.store"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
 
-
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-
-
+        // Dacă setezi AllowedOrigins ca "*", nu poți folosi allowCredentials
+        // Dacă ai nevoie de credentials, trebuie să specifici explicit originile
         corsConfiguration.setAllowCredentials(true);
 
-
-        corsConfiguration.addAllowedHeader("*");
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
         source.registerCorsConfiguration("/**", corsConfiguration);
 
         return new CorsFilter(source);
