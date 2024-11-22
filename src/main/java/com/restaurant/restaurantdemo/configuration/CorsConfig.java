@@ -14,21 +14,24 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        // Permite toate originile
-        corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
-        // SAU, dacă ai nevoie de credentials, specifică explicit originile:
-        // corsConfiguration.setAllowedOrigins(Arrays.asList(
-        //     "http://localhost:3000",
-        //     "https://lmncheap.store",
-        //     "https://www.lmncheap.store"
-        // ));
+        // În loc de setAllowedOrigins cu "*", folosim setAllowedOriginPatterns
+        corsConfiguration.setAllowedOriginPatterns(Arrays.asList(
+                "http://localhost:[*]",       // Permite toate porturile localhost
+                "https://*.lmncheap.store",   // Permite toate subdomeniile
+                "https://lmncheap.store"
+        ));
 
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList(
+                "Origin",
+                "Content-Type",
+                "Accept",
+                "Authorization",
+                "X-Requested-With"
+        ));
 
-        // Dacă setezi AllowedOrigins ca "*", nu poți folosi allowCredentials
-        // Dacă ai nevoie de credentials, trebuie să specifici explicit originile
         corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setMaxAge(3600L); // Cache preflight pentru 1 oră
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
