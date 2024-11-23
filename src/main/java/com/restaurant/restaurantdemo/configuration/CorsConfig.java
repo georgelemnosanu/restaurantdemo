@@ -18,7 +18,10 @@ public class CorsConfig {
         corsConfiguration.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:[*]",       // Pentru dezvoltare locală
                 "https://localhost:[*]",
+                "http://localhost:3000",           // Pentru dezvoltare locală
+                "https://localhost:3000",
                 "https://lmncheap.store",
+                "http://46.202.132.99:3000",
                 "https://*.lmncheap.store",   // Pentru domeniul principal și subdomenii
                 "capacitor://*",              // Pentru Capacitor în aplicații mobile
                 "ionic://*",                  // Pentru Ionic
