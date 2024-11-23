@@ -17,7 +17,8 @@ public class CorsConfig {
         // Permite toate pattern-urile necesare
         corsConfiguration.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:[*]",       // Pentru dezvoltare locală
-                "https://localhost:[*]",      // Pentru Android Studio/iOS simulator
+                "https://localhost:[*]",
+                "https://lmncheap.store",
                 "https://*.lmncheap.store",   // Pentru domeniul principal și subdomenii
                 "capacitor://*",              // Pentru Capacitor în aplicații mobile
                 "ionic://*",                  // Pentru Ionic
