@@ -14,27 +14,27 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        // Permite toate pattern-urile necesare
+
         corsConfiguration.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:[*]",       // Pentru dezvoltare locală
+                "http://localhost:[*]",
                 "https://localhost:[*]",
-                "http://localhost:3000",           // Pentru dezvoltare locală
+                "http://localhost:3000",
                 "https://localhost:3000",
                 "https://lmncheap.store",
                 "http://46.202.132.99:3000",
-                "https://*.lmncheap.store",   // Pentru domeniul principal și subdomenii
-                "capacitor://*",              // Pentru Capacitor în aplicații mobile
-                "ionic://*",                  // Pentru Ionic
-                "http://*",                   // Pentru diverse medii de dezvoltare
-                "https://*"                   // Pentru producție
+                "https://*.lmncheap.store",
+                "capacitor://*",
+                "ionic://*",
+                "http://*",
+                "https://*"
         ));
 
-        // Permite toate metodele HTTP necesare
+
         corsConfiguration.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"
         ));
 
-        // Permite toate header-ele comune
+
         corsConfiguration.setAllowedHeaders(Arrays.asList(
                 "Origin",
                 "Content-Type",
@@ -45,7 +45,7 @@ public class CorsConfig {
                 "Access-Control-Request-Headers"
         ));
 
-        // Permite expunerea anumitor headere către client
+
         corsConfiguration.setExposedHeaders(Arrays.asList(
                 "Access-Control-Allow-Origin",
                 "Access-Control-Allow-Credentials",
@@ -53,7 +53,7 @@ public class CorsConfig {
         ));
 
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setMaxAge(3600L); // Cache preflight pentru 1 oră
+        corsConfiguration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
