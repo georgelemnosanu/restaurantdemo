@@ -2,14 +2,18 @@ package com.restaurant.restaurantdemo.service;
 
 import com.restaurant.restaurantdemo.model.Menu;
 import com.restaurant.restaurantdemo.model.MenuItem;
+import com.restaurant.restaurantdemo.model.Speciality;
 import com.restaurant.restaurantdemo.model.Table;
 import com.restaurant.restaurantdemo.repository.MenuItemRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -18,8 +22,41 @@ public class MenuItemServiceImpl {
 
     private final MenuItemRepository menuItemRepository;
 
-    public MenuItem createMenuItem(MenuItem menuItem){
-        return menuItemRepository.save(menuItem);
+    private final SpecialityServiceImpl specialityService;
+
+    public void createMenuItem(
+            MultipartFile imageFile,
+            String name,
+            String description,
+            String priceStr,
+            String ingredientsStr,
+            String specialityIdStr
+    ) throws IOException {
+        // 1) Parsezi date
+        double price = Double.parseDouble(priceStr);
+
+        // Dacă folosești BLOB
+        byte[] imageData = imageFile.getBytes();
+
+        List<String> ingredients = Arrays.asList(ingredientsStr.split(","));
+
+        int specialityId = Integer.parseInt(specialityIdStr);
+        Speciality speciality = specialityService.findById(specialityId).orElse(null);
+        if (speciality == null) {
+            throw new RuntimeException("Speciality with ID " + specialityId + " not found");
+        }
+
+        // 2) Creezi obiectul MenuItem
+        MenuItem menuItem = new MenuItem();
+        menuItem.setName(name);
+        menuItem.setDescription(description);
+        menuItem.setPrice(price);
+        menuItem.setIngredients(ingredients);
+        menuItem.setImageData(imageData); // BLOB
+        menuItem.setSpeciality(speciality);
+
+        // 3) Salvezi
+        menuItemRepository.save(menuItem);
     }
 
     public List<MenuItem> menuItemList(){

@@ -1,6 +1,7 @@
 package com.restaurant.restaurantdemo.service;
 
 
+import com.restaurant.restaurantdemo.dto.CommandMenuItemDTO;
 import com.restaurant.restaurantdemo.model.*;
 import com.restaurant.restaurantdemo.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -54,38 +55,46 @@ public class CommandService {
     }
 
 
-
     @Transactional
-    public Command createCommandWithMenuItems(Integer tableId, Map<Integer, Integer> menuItemsWithQuantities,String barAdditionalInformation, String kitchenAdditionalInformation) {
-        Table table = tableService.findbyId(tableId);
-
+    public Command createCommand(CreateCommandRequest requestDto) {
+        // 1) Verificăm și obținem masa
+        Table table = tableService.findbyId(requestDto.getTableId());
         if (table == null) {
-            throw new RuntimeException("Table not found with ID: " + tableId);
+            throw new RuntimeException("Table not found with ID: " + requestDto.getTableId());
         }
 
+        // 2) Creăm obiectul Command
         Command command = new Command();
         command.setTable(table);
-        command.setBarAdditionalInformation(barAdditionalInformation);
-        command.setKitchenAdditionalInformation(kitchenAdditionalInformation);
 
-        for (Map.Entry<Integer, Integer> entry : menuItemsWithQuantities.entrySet()) {
-            Integer menuItemId = entry.getKey();
-            Integer quantity = entry.getValue();
-            MenuItem menuItem = menuItemService.findbyId(menuItemId);
 
-            if (menuItem != null) {
-                CommandMenuItem commandMenuItem = new CommandMenuItem(command, menuItem, quantity);
-                command.getMenuItemsWithQuantities().add(commandMenuItem);
+        // 3) Iterăm lista de CommandMenuItemDTO din cerere și mapează-le la entități
+        for (CommandMenuItemDTO dto : requestDto.getItems()) {
+            // Găsim MenuItem-ul real pe baza ID-ului din DTO
+            MenuItem realMenuItem = menuItemService.findbyId(dto.getMenuItemId());
+            if (realMenuItem == null) {
+                // Poți alege să arunci o excepție sau să sari peste acest element
+                continue;
             }
+
+            CommandMenuItem commandMenuItem = new CommandMenuItem();
+            commandMenuItem.setMenuItem(realMenuItem);
+            commandMenuItem.setQuantity(dto.getQuantity());
+            commandMenuItem.setAdditionalNotes(dto.getAdditionalNotes());
+            commandMenuItem.setCommand(command);
+
+            // Adăugăm elementul la colecția din Command
+            command.getMenuItemsWithQuantities().add(commandMenuItem);
         }
 
+        // Salvăm comanda; relațiile vor fi persistate conform configurației (cascade etc.)
         return commandRepository.save(command);
     }
 
+
     public Command editCommandWithMenuItems(Integer commandid, Map<Integer, Integer> menuItemsWithQuantities,String barAdditionalInformation, String kitchenAdditionalInformation) {
         Command existingCommand = commandRepository.findById(commandid).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Command not found"));
-        existingCommand.setBarAdditionalInformation(barAdditionalInformation);
-        existingCommand.setKitchenAdditionalInformation(kitchenAdditionalInformation);
+
 
         for (Map.Entry<Integer, Integer> entry : menuItemsWithQuantities.entrySet()) {
             Integer menuItemId = entry.getKey();

@@ -1,5 +1,8 @@
 package com.restaurant.restaurantdemo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.restaurant.restaurantdemo.model.Command;
+import com.restaurant.restaurantdemo.model.MenuItem;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +10,9 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@JsonIgnoreProperties({"command"}) // evită recursie: command->menuItems->command->...
 public class CommandMenuItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -18,19 +23,18 @@ public class CommandMenuItem {
 
     @ManyToOne
     @JoinColumn(name = "menu_item_id")
+    @JsonIgnoreProperties({"image", "imageData"})
     private MenuItem menuItem;
 
     private Integer quantity;
 
+    private String additionalNotes; // note individuale
+
+    public CommandMenuItem() {}
+
     public CommandMenuItem(Command command, MenuItem menuItem, Integer quantity) {
-        this.command=command;
-        this.menuItem=menuItem;
-        this.quantity=quantity;
+        this.command = command;
+        this.menuItem = menuItem;
+        this.quantity = quantity;
     }
-
-    public CommandMenuItem() {
-
-    }
-
-
 }

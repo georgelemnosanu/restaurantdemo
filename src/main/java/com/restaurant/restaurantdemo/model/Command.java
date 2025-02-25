@@ -23,9 +23,6 @@ public class Command {
 
     private Table table;
 
-    private String barAdditionalInformation;
-    private String kitchenAdditionalInformation;
-
     @OneToMany(mappedBy = "command", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("command")
     private Set<CommandMenuItem> menuItemsWithQuantities = new HashSet<>();

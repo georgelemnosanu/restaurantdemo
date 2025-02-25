@@ -38,41 +38,29 @@ public class ComandController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Command> createCommandWithMenuItems(
-            @RequestBody CreateCommandRequest request) {
-        Integer tableId = request.getTableId();
-        Map<Integer, Integer> menuItemsWithQuantities = request.getMenuItemsWithQuantities();
-        String barAdditionalInformation = request.getBarNotes();
-        String kitchenAdditionalInformation = request.getKitchenNotes();
-
-        Command createdCommand = commandService.createCommandWithMenuItems(
-                tableId,
-                menuItemsWithQuantities,
-                barAdditionalInformation,
-                kitchenAdditionalInformation
-        );
-
-        return new ResponseEntity<>(createdCommand, HttpStatus.CREATED);
+    public ResponseEntity<Command> createCommand(@RequestBody CreateCommandRequest requestDto) {
+        Command command = commandService.createCommand(requestDto);
+        return ResponseEntity.ok(command);
     }
 
-    @PutMapping("/editCommand")
-    public ResponseEntity<Command> editCommandWithMenuItems(
-            @RequestBody CreateCommandRequest request) {
-
-        Map<Integer, Integer> menuItemsWithQuantities = request.getMenuItemsWithQuantities();
-        String barAdditionalInformation = request.getBarNotes();
-        String kitchenAdditionalInformation = request.getKitchenNotes();
-        Integer commandId = request.getCommandId();
-
-        Command updatedCommand = commandService.editCommandWithMenuItems(
-                commandId,
-                menuItemsWithQuantities,
-                barAdditionalInformation,
-                kitchenAdditionalInformation
-        );
-
-        return new ResponseEntity<>(updatedCommand, HttpStatus.OK);
-    }
+//    @PutMapping("/editCommand")
+//    public ResponseEntity<Command> editCommandWithMenuItems(
+//            @RequestBody CreateCommandRequest request) {
+//
+//        Map<Integer, Integer> menuItemsWithQuantities = request.getMenuItemsWithQuantities();
+//        String barAdditionalInformation = request.getBarNotes();
+//        String kitchenAdditionalInformation = request.getKitchenNotes();
+//        Integer commandId = request.getCommandId();
+//
+//        Command updatedCommand = commandService.editCommandWithMenuItems(
+//                commandId,
+//                menuItemsWithQuantities,
+//                barAdditionalInformation,
+//                kitchenAdditionalInformation
+//        );
+//
+//        return new ResponseEntity<>(updatedCommand, HttpStatus.OK);
+//    }
 
 
     @GetMapping("/{commandId}")

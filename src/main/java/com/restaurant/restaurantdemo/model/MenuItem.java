@@ -1,11 +1,13 @@
 package com.restaurant.restaurantdemo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.reflect.Array;
+import java.util.*;
 
 @Getter
 @Setter
@@ -21,13 +23,33 @@ public class MenuItem {
 
     private String description;
 
+    @ElementCollection
+    @CollectionTable(
+            name = "menu_item_ingredients",
+            joinColumns = @JoinColumn(name = "menu_item_id")
+    )
+    private List<String> ingredients = new ArrayList<>();
+
     private double price;
 
+    @Lob
+    @Column(name = "image_data")
+    @JsonIgnore
+    private byte[] imageData;
+
+    @JsonProperty("imageData")
+    public String getImageDataBase64() {
+        return imageData != null ? Base64.getEncoder().encodeToString(imageData) : null;
+    }
 
     @ManyToOne
     @JoinColumn(name="speciality_id")
     private Speciality speciality;
 
+    @JsonProperty("category")
+    public String getCategoryName() {
+        return speciality != null ? speciality.getName() : null;
+    }
 
     public MenuItem(Integer id) {
         this.id = id;

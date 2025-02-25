@@ -1,5 +1,7 @@
 package com.restaurant.restaurantdemo.controller;
 
+import com.restaurant.restaurantdemo.dto.MenuItemDTO;
+import com.restaurant.restaurantdemo.dto.SpecialityDTO;
 import com.restaurant.restaurantdemo.model.Speciality;
 import com.restaurant.restaurantdemo.model.SpecialityClass;
 import com.restaurant.restaurantdemo.repository.SpecialityRepository;
@@ -14,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/speciality")
@@ -25,9 +28,20 @@ public class SpecialityController {
     private SpecialityRepository specialityRepository;
 
     @GetMapping("/allSpeciality")
-    public List<Speciality>specialityList(){
-       return specialityRepository.findAll();
+    public List<SpecialityDTO> specialityList(){
+        List<Speciality> specialities = specialityRepository.findAll();
+        return specialities.stream().map(s -> {
+            SpecialityDTO dto = new SpecialityDTO();
+            dto.setId(s.getId());
+            dto.setName(s.getName());
+            return dto;
+        }).collect(Collectors.toList());
     }
+
+//    @GetMapping("/allSpecialityWithMenuItems")
+//    public List<SpecialityDTO> specialityDTOS(){
+//        List<Speciality> specialities =specialityRepository.findAll().stream().toList();
+//    }
 
     @GetMapping ("/allSpecialityClass")
     public List<SpecialityClass> specialityClassList(){
