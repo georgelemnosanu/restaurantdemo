@@ -1,6 +1,7 @@
 package com.restaurant.restaurantdemo.controller;
 
 import com.restaurant.restaurantdemo.model.*;
+import com.restaurant.restaurantdemo.repository.CommandRepository;
 import com.restaurant.restaurantdemo.repository.SpecialityClassRepository;
 import com.restaurant.restaurantdemo.service.CommandService;
 import com.restaurant.restaurantdemo.service.MenuItemServiceImpl;
@@ -9,8 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/command")
@@ -26,6 +26,8 @@ public class ComandController {
 
     @Autowired
     SpecialityClassRepository specialityClassRepository;
+    @Autowired
+    private CommandRepository commandRepository;
 
     @GetMapping("/allSpecialityClass")
     public List<SpecialityClass> specialityClassList(){
@@ -35,6 +37,57 @@ public class ComandController {
      @GetMapping("/viewAllCommand")
      public List<Command> commandList(){
          return commandService.commandList();
+    }
+
+    @GetMapping("/bySpeciality")
+    public ResponseEntity<Map<String, List<Command>>> getCommandsGroupedBySpeciality() {
+        // Obținem toate comenzile (sau, dacă preferi, doar comenzile active)
+        List<Command> commands = commandService.commandList();
+
+        // Vom grupa comenzile într-un Map unde cheia este numele SpecialityClass
+        Map<String, List<Command>> groupedCommands = new HashMap<>();
+
+        for (Command command : commands) {
+            // Folosim un set pentru a evita adăugarea duplicat a aceleiași comenzi
+            Set<String> specialityNames = new HashSet<>();
+
+            // Iterăm prin toate elementele din comandă
+            for (CommandMenuItem item : command.getMenuItemsWithQuantities()) {
+                if (item.getMenuItem() != null &&
+                        item.getMenuItem().getSpeciality() != null &&
+                        item.getMenuItem().getSpeciality().getSpecialityClass() != null) {
+
+                    String specialityName = item.getMenuItem().getSpeciality().getSpecialityClass().getName();
+                    specialityNames.add(specialityName);
+                }
+            }
+
+            // Pentru fiecare specialitate din comandă, adăugăm comanda în map
+            for (String specialityName : specialityNames) {
+                groupedCommands.computeIfAbsent(specialityName, k -> new ArrayList<>()).add(command);
+            }
+        }
+
+        return ResponseEntity.ok(groupedCommands);
+    }
+
+    @GetMapping("/table/{tableId}")
+    public ResponseEntity<List<Command>> getCommandsByTableId(@PathVariable Integer tableId) {
+        List<Command> commands = commandService.findActiveCommandsByTableId(tableId);
+        return ResponseEntity.ok(commands);
+    }
+
+    @PutMapping("/close/{tableId}")
+    public ResponseEntity<?> closeCommand(@PathVariable Integer tableId) {
+        List<Command> commands = commandService.findCommandsByTableId(tableId);
+        if (commands.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        for (Command command : commands) {
+            command.setStatus(CommandStatus.CLOSED);
+            commandRepository.save(command);
+        }
+        return ResponseEntity.ok(commands);
     }
 
     @PostMapping("/create")

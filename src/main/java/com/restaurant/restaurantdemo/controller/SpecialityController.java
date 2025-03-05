@@ -48,6 +48,13 @@ public class SpecialityController {
         return specialityServiceImpl.specialityClassList();
     }
 
+    @GetMapping("/allSpecialityByClassId")
+    public List<Speciality> specialityByClassId(Integer classId){
+        return specialityServiceImpl.listSpecialityByClassId(classId);
+    }
+
+
+
     @PostMapping("/submitCreateSpeciality")
     public ResponseEntity<String> createSpeciality(@RequestBody Speciality speciality) {
         try {

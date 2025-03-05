@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.util.*;
 
+
 @Entity
 @Getter
 @Setter
@@ -26,6 +27,9 @@ public class Command {
     @OneToMany(mappedBy = "command", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("command")
     private Set<CommandMenuItem> menuItemsWithQuantities = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    private CommandStatus status = CommandStatus.IN_PROGRESS;
 
 
      public Command(){

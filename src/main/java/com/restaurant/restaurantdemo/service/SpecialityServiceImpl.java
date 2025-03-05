@@ -41,6 +41,15 @@ public class SpecialityServiceImpl {
         return specialityRepository.save(existingSpeciality);
     }
 
+    public List<Speciality> listSpecialityByClassId(Integer classId) {
+        List<Speciality> specialityClassList = specialityRepository.findBySpecialityClass_Id(classId);
+
+        if (specialityClassList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Speciality not found");
+        }
+
+        return specialityClassList;
+    }
     public Optional<Speciality> findById(Integer specialityId) {
         return specialityRepository.findById(specialityId);
     }

@@ -96,6 +96,33 @@ public class MenuItemController {
         }).collect(Collectors.toList());
     }
 
+
+    @GetMapping("/viewMenuItemsBySpecialityClass/{specialityClassId}")
+    public List<MenuItemDTO> getMenuItemsBySpecialityClass(@PathVariable Integer specialityClassId) {
+        List<MenuItem> items = menuItemRepository.findBySpeciality_SpecialityClass_Id(specialityClassId);
+        return items.stream().map(item -> {
+            MenuItemDTO dto = new MenuItemDTO();
+            dto.setId(item.getId());
+            dto.setName(item.getName());
+            dto.setDescription(item.getDescription());
+            dto.setPrice(item.getPrice());
+            dto.setIngredients(item.getIngredients());
+
+            // Adăugăm numele specialității
+            dto.setCategory(item.getSpeciality() != null ? item.getSpeciality().getName() : null);
+
+            // Convertim imaginea în Base64
+            if (item.getImageData() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(item.getImageData());
+                dto.setImage("data:image/jpeg;base64," + base64Image);
+            } else {
+                dto.setImage(null);
+            }
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
     @PutMapping("/editMenuItem/{menuItemId}")
     public ResponseEntity<String> updateMenuItem(
             @PathVariable Integer menuItemId,

@@ -48,10 +48,13 @@ public class CommandService {
                 .orElseThrow(()-> new EntityNotFoundException("Command Not Found!"));
     }
 
+    public List<Command> findCommandsByTableId(Integer tableId) {
+        return commandRepository.findByTableId(tableId);
+    }
 
 
-    public SpecialityClass findSpecialityById(Integer id){
-      return specialityClassRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Speciality Not Found!"));
+    public List<Command> findActiveCommandsByTableId(Integer tableId) {
+        return commandRepository.findByTableIdAndStatus(tableId, CommandStatus.IN_PROGRESS);
     }
 
 
