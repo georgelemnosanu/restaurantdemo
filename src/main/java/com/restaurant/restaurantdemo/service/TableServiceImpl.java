@@ -29,15 +29,11 @@ public class TableServiceImpl {
               .orElseThrow(()-> new EntityNotFoundException("Table Not Found!"));
   }
 
-  public Table findByID(Integer id){
-      return tableRepository.findById(id).orElseThrow(()-> new ObjectNotFoundException(HttpStatus.NOT_FOUND,"Table Not Found"));
-  }
-
   public Table createTable(Table table){
       return tableRepository.save(table);
   }
 
 
-  }
+}
 
 
