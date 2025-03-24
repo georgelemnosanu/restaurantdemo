@@ -43,7 +43,7 @@ public class MenuItemController {
             @RequestPart("specialityId") String specialityIdStr
     ) {
         try {
-            // APELĂM direct SERVICE-ul, pasăm datele
+
             menuItemService.createMenuItem(
                     imageFile,
                     name,
@@ -81,15 +81,15 @@ public class MenuItemController {
             dto.setDescription(item.getDescription());
             dto.setPrice(item.getPrice());
             dto.setIngredients(item.getIngredients());
-            // Pentru categoria, presupunem că vrei numele specialității:
+
             dto.setCategory(item.getSpeciality() != null ? item.getSpeciality().getName() : null);
 
-            // Pentru imagine: dacă imageData nu e null, adaugă prefixul
+
             if (item.getImageData() != null) {
                 String base64Image = Base64.getEncoder().encodeToString(item.getImageData());
                 dto.setImage("data:image/jpeg;base64," + base64Image);
             } else {
-                dto.setImage(null); // sau poți seta un URL de placeholder dacă dorești
+                dto.setImage(null);
             }
 
             return dto;
@@ -108,10 +108,10 @@ public class MenuItemController {
             dto.setPrice(item.getPrice());
             dto.setIngredients(item.getIngredients());
 
-            // Adăugăm numele specialității
+
             dto.setCategory(item.getSpeciality() != null ? item.getSpeciality().getName() : null);
 
-            // Convertim imaginea în Base64
+
             if (item.getImageData() != null) {
                 String base64Image = Base64.getEncoder().encodeToString(item.getImageData());
                 dto.setImage("data:image/jpeg;base64," + base64Image);

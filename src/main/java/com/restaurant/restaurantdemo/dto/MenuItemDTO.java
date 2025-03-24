@@ -16,8 +16,8 @@ public class MenuItemDTO {
     private String name;
     private String description;
     private double price;
-    private String image; // Imaginea va fi în format base64, cu prefixul corespunzător
-    private String category; // Numele categoriei
+    private String image;
+    private String category;
     private List<String> ingredients;
 
     public MenuItemDTO() {

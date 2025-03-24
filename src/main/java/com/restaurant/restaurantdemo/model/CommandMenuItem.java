@@ -10,7 +10,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@JsonIgnoreProperties({"command"}) // evită recursie: command->menuItems->command->...
+@JsonIgnoreProperties({"command"})
 public class CommandMenuItem {
 
     @Id
@@ -28,7 +28,7 @@ public class CommandMenuItem {
 
     private Integer quantity;
 
-    private String additionalNotes; // note individuale
+    private String additionalNotes;
 
     public CommandMenuItem() {}
 

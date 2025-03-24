@@ -32,10 +32,8 @@ public class MenuItemServiceImpl {
             String ingredientsStr,
             String specialityIdStr
     ) throws IOException {
-        // 1) Parsezi date
         double price = Double.parseDouble(priceStr);
 
-        // Dacă folosești BLOB
         byte[] imageData = imageFile.getBytes();
 
         List<String> ingredients = Arrays.asList(ingredientsStr.split(","));
@@ -46,7 +44,6 @@ public class MenuItemServiceImpl {
             throw new RuntimeException("Speciality with ID " + specialityId + " not found");
         }
 
-        // 2) Creezi obiectul MenuItem
         MenuItem menuItem = new MenuItem();
         menuItem.setName(name);
         menuItem.setDescription(description);
@@ -55,7 +52,6 @@ public class MenuItemServiceImpl {
         menuItem.setImageData(imageData); // BLOB
         menuItem.setSpeciality(speciality);
 
-        // 3) Salvezi
         menuItemRepository.save(menuItem);
     }
 

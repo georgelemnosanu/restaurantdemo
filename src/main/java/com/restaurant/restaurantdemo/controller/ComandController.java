@@ -42,17 +42,14 @@ public class ComandController {
 
     @GetMapping("/bySpeciality")
     public ResponseEntity<Map<String, List<Command>>> getCommandsGroupedBySpeciality() {
-        // Obținem toate comenzile (sau, dacă preferi, doar comenzile active)
         List<Command> commands = commandService.commandList();
-
-        // Vom grupa comenzile într-un Map unde cheia este numele SpecialityClass
         Map<String, List<Command>> groupedCommands = new HashMap<>();
 
         for (Command command : commands) {
-            // Folosim un set pentru a evita adăugarea duplicat a aceleiași comenzi
+
             Set<String> specialityNames = new HashSet<>();
 
-            // Iterăm prin toate elementele din comandă
+
             for (CommandMenuItem item : command.getMenuItemsWithQuantities()) {
                 if (item.getMenuItem() != null &&
                         item.getMenuItem().getSpeciality() != null &&
@@ -63,7 +60,6 @@ public class ComandController {
                 }
             }
 
-            // Pentru fiecare specialitate din comandă, adăugăm comanda în map
             for (String specialityName : specialityNames) {
                 groupedCommands.computeIfAbsent(specialityName, k -> new ArrayList<>()).add(command);
             }
@@ -74,7 +70,6 @@ public class ComandController {
 
     @PutMapping("/requestBill/{tableId}")
     public ResponseEntity<?> requestBill(@PathVariable Integer tableId) {
-        // 1) Setăm billRequested la true pe masă
         Table table = tableService.findbyId(tableId);
         if (table == null) {
             return ResponseEntity.notFound().build();
@@ -82,10 +77,8 @@ public class ComandController {
         table.setBillRequested(true);
         tableRepository.save(table);
 
-        // 2) Luăm toate comenzile IN_PROGRESS
         List<Command> commands = commandService.findActiveCommandsByTableId(tableId);
 
-        // 3) Returnăm un JSON care conține comenzile + billRequested=true
         return ResponseEntity.ok(Map.of(
                 "orders", commands,
                 "billRequested", true
@@ -108,7 +101,6 @@ public class ComandController {
 
     @PutMapping("/close/{tableId}")
     public ResponseEntity<?> closeCommand(@PathVariable Integer tableId) {
-        // 1) Marcăm comenzile existente ca CLOSED
         List<Command> commands = commandService.findCommandsByTableId(tableId);
         if (commands.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -118,14 +110,12 @@ public class ComandController {
             commandRepository.save(command);
         }
 
-        // 2) (Opțional) Resetăm billRequested la false
         Table table = tableService.findbyId(tableId);
         if (table != null) {
             table.setBillRequested(false);
             tableRepository.save(table);
         }
 
-        // 3) Returnăm comenzi + billRequested=false
         return ResponseEntity.ok(Map.of(
                 "orders", commands,
                 "billRequested", false
